@@ -73,20 +73,32 @@ class RegisterGui:
         self.tree.bind("<Double-1>", double_handler)
         # 添加寄存器按钮
         self.add_reg_bt = tkinter.Button(self.file_show_fm, text="添   加", font=("楷体", 14))
-        self.add_reg_bt.place(relx=0.86, rely=0.1, relwidth=0.13, relheight=0.05)
+        self.add_reg_bt.place(relx=0.86, rely=0.04, relwidth=0.13, relheight=0.05)
         self.add_reg_bt.config(command=lambda var=self.add_reg_bt: button_handler(var))
-        # 删除寄存器按钮
-        self.del_reg_bt = tkinter.Button(self.file_show_fm, text="删   除", font=("楷体", 14))
-        self.del_reg_bt.place(relx=0.86, rely=0.2, relwidth=0.13, relheight=0.05)
+        # 删除选中寄存器按钮
+        self.del_reg_bt = tkinter.Button(self.file_show_fm, text="删除选中", font=("楷体", 14))
+        self.del_reg_bt.place(relx=0.86, rely=0.14, relwidth=0.13, relheight=0.05)
         self.del_reg_bt.config(command=lambda var=self.del_reg_bt: button_handler(var))
-        # 读取全部按钮
-        self.rd_all_bt = tkinter.Button(self.file_show_fm, text="读取全部", font=("楷体", 14))
-        self.rd_all_bt.place(relx=0.86, rely=0.3, relwidth=0.13, relheight=0.05)
-        self.rd_all_bt.config(command=lambda var=self.rd_all_bt: button_handler(var))
+        # 删除全部寄存器按钮
+        self.del_all_bt = tkinter.Button(self.file_show_fm, text="删除全部", font=("楷体", 14))
+        self.del_all_bt.place(relx=0.86, rely=0.24, relwidth=0.13, relheight=0.05)
+        self.del_all_bt.config(command=lambda var=self.del_all_bt: button_handler(var))
+        # 保存寄存器按钮
+        self.sv_reg_bt = tkinter.Button(self.file_show_fm, text="保存全部", font=("楷体", 14))
+        self.sv_reg_bt.place(relx=0.86, rely=0.34, relwidth=0.13, relheight=0.05)
+        self.sv_reg_bt.config(command=lambda var=self.sv_reg_bt: button_handler(var))
         # 读取选中按钮
         self.rd_sel_bt = tkinter.Button(self.file_show_fm, text="读取选中", font=("楷体", 14))
-        self.rd_sel_bt.place(relx=0.86, rely=0.4, relwidth=0.13, relheight=0.05)
+        self.rd_sel_bt.place(relx=0.86, rely=0.54, relwidth=0.13, relheight=0.05)
         self.rd_sel_bt.config(command=lambda var=self.rd_sel_bt: button_handler(var))
+        # 读取全部按钮
+        self.rd_all_bt = tkinter.Button(self.file_show_fm, text="读取全部", font=("楷体", 14))
+        self.rd_all_bt.place(relx=0.86, rely=0.64, relwidth=0.13, relheight=0.05)
+        self.rd_all_bt.config(command=lambda var=self.rd_all_bt: button_handler(var))
+        # 生成头文件
+        self.crt_h_bt = tkinter.Button(self.file_show_fm, text="生成头文件", font=("楷体", 14))
+        self.crt_h_bt.place(relx=0.86, rely=0.84, relwidth=0.13, relheight=0.05)
+        self.crt_h_bt.config(command=lambda var=self.crt_h_bt: button_handler(var))
 
         # 创建任务处理线程
         threading.Thread(target=self.task_handler, daemon=True).start()
@@ -119,14 +131,20 @@ class RegisterGui:
             if msg == "添   加":
                 AddRegister(self.tree, self.file_show_fm)
                 pass
-            if msg == "删   除":
+            if msg == "删除选中":
                 sel_tup = self.tree.selection()
                 for each in sel_tup:
                     self.tree.delete(each)
                 pass
-            if msg == "读取全部":
+            if msg == "删除全部":
+                pass
+            if msg == "保存全部":
                 pass
             if msg == "读取选中":
+                pass
+            if msg == "读取全部":
+                pass
+            if msg == "生成头文件":
                 pass
             if msg == "显示寄存器列表":
                 pass
@@ -145,22 +163,28 @@ class AddRegister:
 
         self.tl = tkinter.Toplevel(father)
         self.tl.title("添加寄存器")
-        self.tl.geometry("400x200")
+        self.tl.geometry("400x150")
         self.tl.resizable(0, 0)
         self.tl.attributes("-topmost", 1)
+        # 名称标签
         self.reg_name_lb = tkinter.Label(self.tl, text="名  称", font=("楷体", 14))
         self.reg_name_lb.place(relx=0.0, rely=0.05, relwidth=0.3, relheight=0.2)
+        # 名称输入框
         self.reg_name_nt = tkinter.Entry(self.tl, font=("Times New Roman", 18))
         self.reg_name_nt.place(relx=0.35, rely=0.06, relwidth=0.6, relheight=0.18)
+        # 地址标签
         self.reg_addr_lb = tkinter.Label(self.tl, text="地  址", font=("楷体", 14))
         self.reg_addr_lb.place(relx=0.0, rely=0.3, relwidth=0.3, relheight=0.2)
+        # 地址输入框
         self.reg_addr_nt = tkinter.Entry(self.tl, font=("Times New Roman", 18))
         self.reg_addr_nt.place(relx=0.35, rely=0.31, relwidth=0.6, relheight=0.18)
+        # 确定按钮
         self.reg_ok_bt = tkinter.Button(self.tl, text="确定", font=("楷体", 14))
-        self.reg_ok_bt.place(relx=0.1, rely=0.7, relwidth=0.3, relheight=0.2)
+        self.reg_ok_bt.place(relx=0.1, rely=0.6, relwidth=0.3, relheight=0.25)
         self.reg_ok_bt.config(command=lambda var=self.reg_ok_bt: self.button_handler(var))
+        # 取消按钮
         self.reg_no_bt = tkinter.Button(self.tl, text="取消", font=("楷体", 14))
-        self.reg_no_bt.place(relx=0.6, rely=0.7, relwidth=0.3, relheight=0.2)
+        self.reg_no_bt.place(relx=0.6, rely=0.6, relwidth=0.3, relheight=0.25)
         self.reg_no_bt.config(command=lambda var=self.reg_no_bt: self.button_handler(var))
 
     def button_handler(self, button):
@@ -185,6 +209,7 @@ class AddRegister:
             # 获取值
             name = self.reg_name_nt.get()
             addr = int(self.reg_addr_nt.get(), 16)
+            # 插入树状列表
             self.tree.insert("", index="end", text=name, values=("0x%08X" % addr,), tags="odd")
             self.reg_name_nt.delete(0, "end")
             self.reg_addr_nt.delete(0, "end")
